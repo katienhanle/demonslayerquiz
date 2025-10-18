@@ -1,10 +1,7 @@
 // app/result/page.js
 "use client";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import AvatarComposer from "@/components/AvatarComposer";
 import { score } from "@/lib/scoring";
@@ -33,19 +30,13 @@ function readSavedAnswers() {
 
 export default function ResultPage() {
   const router = useRouter();
-  const [debug, setDebug] = useState(false);
+
   const [avatar, setAvatar] = useState(null);
   const [result, setResult] = useState(null);
   const [styleKey, setStyleKey] = useState("");
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    try {
-      const d = new URLSearchParams(window.location.search).get("debug") === "1";
-      setDebug(d);
-    } catch {}
-  }, []);
-
+  // Load avatar + compute result
   useEffect(() => {
     try {
       const a = localStorage.getItem("avatar");
@@ -65,49 +56,53 @@ export default function ResultPage() {
         return;
       }
 
-      let computedKey = s.styleKey;
-      if (!computedKey && s.mbti) {
-        const mbti = String(s.mbti).toUpperCase();
-        computedKey = MBTI_TO_STYLE[mbti];
-        if (!computedKey) {
-          setError(`MBTI "${mbti}" is not mapped to a Style. Update MBTI_TO_STYLE.`);
-          setResult(s);
-          return;
-        }
+      let key = s.styleKey;
+      if (!key && s.mbti) {
+        key = MBTI_TO_STYLE[String(s.mbti).toUpperCase()];
       }
-      if (!computedKey || !STYLES[computedKey]) {
-        setError("Could not resolve a style from scoring output.");
+      if (!key) {
+        setError("Could not resolve a style key from scoring output.");
+        setResult(s);
+        return;
+      }
+      if (!STYLES[key]) {
+        setError(`Unknown style key: ${key}. Add it to STYLES.`);
         setResult(s);
         return;
       }
 
       setResult(s);
-      setStyleKey(computedKey);
-      if (debug) console.log("[Result debug] scoring output:", s);
+      setStyleKey(key);
     } catch (e) {
       console.error("[result] scoring failed:", e);
       setError("Scoring failed. Please retry the quiz.");
     }
-  }, [debug]);
+  }, []); // ← no `debug` here
 
   if (!result && !error) {
-    return <div className="box"><p>Scoring…</p></div>;
+    return (
+      <main className="screen-wrap">
+        <div className="box"><p>Scoring…</p></div>
+      </main>
+    );
   }
 
   if (error) {
     return (
-      <div className="box">
-        <h2 style={{ marginTop: 0 }}>Uh oh.</h2>
-        <p style={{ opacity: 0.9 }}>{error}</p>
-        <div style={{ display: "flex", gap: 12 }}>
-          <button className="btn ghost" onClick={() => router.replace("/quiz")}>
-            Back to Quiz
-          </button>
-          <button className="btn primary" onClick={() => router.replace("/")}>
-            Return Home
-          </button>
+      <main className="screen-wrap">
+        <div className="box" style={{ display: "flow-root" }}>
+          <h2 style={{ marginTop: 0 }}>Uh oh.</h2>
+          <p style={{ opacity: 0.9 }}>{error}</p>
+          <div style={{ display: "flex", gap: 12 }}>
+            <button className="btn ghost" onClick={() => router.replace("/quiz")}>
+              Back to Quiz
+            </button>
+            <button className="btn primary" onClick={() => router.replace("/")}>
+              Return Home
+            </button>
+          </div>
         </div>
-      </div>
+      </main>
     );
   }
 
@@ -118,75 +113,79 @@ export default function ResultPage() {
   const clashes = (style.clashes || []).map(byKey).filter(Boolean);
 
   return (
-    <div
-      className="box"
-      style={{
-        borderColor: p1,
-        display: "flow-root",
-        paddingBottom: 16,
-        overflow: "hidden",
-      }}
-    >
-      <header style={{ marginBottom: 18 }}>
-        <h1 style={{ margin: 0, fontSize: "clamp(28px,4vw,42px)" }}>
-          Your Style: <span style={{ color: p1 }}>{style.name}</span>
-        </h1>
-        <p style={{ color: "rgba(255,255,255,.82)", marginTop: 6 }}>
-          {style.tagline} <span style={{ opacity: 0.7 }}>({style.code})</span>
-        </p>
-      </header>
-
+    <main className="screen-wrap">
       <div
-        className="quiz-grid"
-        style={{ gridTemplateColumns: "280px 1fr", gap: "1.75rem", alignItems: "stretch" }}
+        className="box"
+        style={{
+          borderColor: p1,
+          display: "flow-root",
+          paddingBottom: 16,
+          overflow: "hidden",
+        }}
       >
-        <aside
-          className="panel"
-          style={{
-            background: "rgba(255,255,255,.05)",
-            border: `1px solid ${p1}33`,
-            borderRadius: 16,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: 20,
-            height: "100%",
-          }}
-        >
-          <div style={{ position: "relative", width: 192, height: 192, lineHeight: 0 }}>
-            <AvatarComposer avatar={avatar || {}} />
-            <img
-              src={`/assets/overlays/${style.key.toLowerCase()}_overlay.png`}
-              alt={`${style.name} overlay`}
-              onError={(e) => { e.currentTarget.style.display = "none"; }}
-              style={{
-                position: "absolute",
-                inset: 0,
-                width: "100%",
-                height: "100%",
-                imageRendering: "pixelated",
-                pointerEvents: "none",
-                display: "block",
-              }}
-            />
-          </div>
-        </aside>
+        <header style={{ marginBottom: 18 }}>
+          <h1 style={{ margin: 0, fontSize: "clamp(28px,4vw,42px)" }}>
+            Your Style: <span style={{ color: p1 }}>{style.name}</span>
+          </h1>
+          <p style={{ color: "rgba(255,255,255,.82)", marginTop: 6 }}>
+            {style.tagline} <span style={{ opacity: .7 }}>({style.code})</span>
+          </p>
+        </header>
 
-        <section
-          className="panel"
+        <div
+          className="quiz-grid"
           style={{
-            background: `linear-gradient(180deg, ${p1}22, ${p2}11)`,
-            border: `1px solid ${p1}55`,
-            borderRadius: 16,
-            padding: 22,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            height: "100%",
+            margin: 0,
+            gridTemplateColumns: "minmax(240px, 320px) 1fr",
+            gap: "1.75rem",
+            alignItems: "start",
           }}
         >
-          <div>
-            <p style={{ marginTop: 0, lineHeight: 1.65, opacity: 0.92, whiteSpace: "pre-line" }}>
+          {/* Left: avatar + overlay */}
+          <aside
+            className="panel"
+            style={{
+              margin: 0,
+              background: "rgba(255,255,255,.05)",
+              border: `1px solid ${p1}33`,
+              borderRadius: 16,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 20,
+            }}
+          >
+            <div style={{ position: "relative", width: 192, height: 192, lineHeight: 0 }}>
+              <AvatarComposer avatar={avatar || {}} />
+              <img
+                src={`/assets/overlays/${style.key.toLowerCase()}_overlay.png`}
+                alt={`${style.name} overlay`}
+                onError={(e) => { e.currentTarget.style.display = "none"; }}
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  width: "100%",
+                  height: "100%",
+                  imageRendering: "pixelated",
+                  pointerEvents: "none",
+                  display: "block",
+                }}
+              />
+            </div>
+          </aside>
+
+          {/* Right: description + chips + CTA */}
+          <section
+            className="panel"
+            style={{
+              margin: 0,
+              background: `linear-gradient(180deg, ${p1}22, ${p2}11)`,
+              border: `1px solid ${p1}55`,
+              borderRadius: 16,
+              padding: 22,
+            }}
+          >
+            <p style={{ marginTop: 0, lineHeight: 1.65, opacity: .92, whiteSpace: "pre-line" }}>
               {style.description}
             </p>
 
@@ -238,19 +237,19 @@ export default function ResultPage() {
                 </div>
               )}
             </div>
-          </div>
 
-          <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 24 }}>
-            <button
-              className="btn primary"
-              style={{ background: p1, borderColor: p1 }}
-              onClick={() => router.push("/")}
-            >
-              Return Home
-            </button>
-          </div>
-        </section>
+            <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 24 }}>
+              <button
+                className="btn primary return-home"
+                style={{ background: p1, borderColor: p1 }}
+                onClick={() => router.push("/")}
+              >
+                Return Home
+              </button>
+            </div>
+          </section>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
