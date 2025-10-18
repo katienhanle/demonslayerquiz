@@ -742,32 +742,32 @@ body {
     .form-grid { grid-template-columns: 1fr; }
     .form-grid .span-2 { grid-column: span 1; }
   }
-/* --- Mobile centering fix for avatar canvas --- */
-.preview-card {
-    position: relative;
-    box-sizing: border-box;   /* keep border true to size */
-    line-height: 0;           /* kill baseline gap for inline canvases */
-  }
-  
-  /* Center whatever the composer renders (canvas/img/svg) perfectly */
-  .preview-card > canvas,
-  .preview-card > img,
-  .preview-card > svg {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: block;           /* avoids inline baseline issues */
-    margin: 0;
-    image-rendering: pixelated; /* keep crisp pixels */
-  }
-  
-  /* iPhone-size polish: keep the stage square and avoid crowding */
-  @media (max-width: 480px) {
+/* Mobile-only: center the avatar inside the white frame */
+@media (max-width: 480px) {
+    /* The white-framed box */
     .preview-card {
-      width: 180px !important;   /* or 192px if you prefer */
-      height: 180px !important;
-      margin: 0 auto;            /* center the frame itself */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /* keep it perfectly square and centered without affecting desktop */
+      aspect-ratio: 1 / 1;
+      width: 78vw;            /* or 180–192px if you prefer a fixed size */
+      max-width: 192px;
+      margin: 0 auto;
+      line-height: 0;         /* kill baseline gap in parent */
+      box-sizing: border-box;
+    }
+  
+    /* Whatever the composer renders (canvas/img/svg) */
+    .preview-card > canvas,
+    .preview-card > img,
+    .preview-card > svg {
+      position: static !important;    /* undo any absolute from components */
+      transform: none !important;     /* remove offsets */
+      display: block;                 /* no inline baseline */
+      margin: 0;
+      vertical-align: middle;
+      image-rendering: pixelated;     /* keep the 32px sprite crisp */
     }
   }
   
