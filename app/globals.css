@@ -479,3 +479,15 @@ body {
   .box { box-sizing: border-box; display: flow-root; padding-bottom: 16px; }
   .quiz-grid, .panel { margin: 0; }
   
+  /* Result page grid rules */
+.result-grid {
+    grid-template-columns: minmax(240px, 320px) 1fr;
+    gap: 1.75rem;
+    align-items: start;
+  }
+  
+  /* Stack on phones/tablets */
+  @media (max-width: 900px) {
+    .result-grid { grid-template-columns: 1fr; }
+  }
+  

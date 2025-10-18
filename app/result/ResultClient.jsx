@@ -78,10 +78,8 @@ export default function ResultClient() {
   const clashes = (style.clashes || []).map(byKey).filter(Boolean);
 
   return (
-    <div
-      className="box"
-      style={{ borderColor: p1, display: "flow-root", paddingBottom: 16, overflow: "hidden" }}
-    >
+    <div className="box" style={{ borderColor: p1, display:"flow-root", paddingBottom:16 }}>
+
       <header style={{ marginBottom: 18 }}>
         <h1 style={{ margin: 0, fontSize: "clamp(28px,4vw,42px)" }}>
           Your Style: <span style={{ color: p1 }}>{style.name}</span>
@@ -91,8 +89,7 @@ export default function ResultClient() {
         </p>
       </header>
 
-      <div className="quiz-grid" style={{ gridTemplateColumns: "minmax(240px, 320px) 1fr", gap: "1.75rem", alignItems: "start" }}>
-        {/* LEFT: Avatar + overlay */}
+      <div className="quiz-grid result-grid">        {/* LEFT: Avatar + overlay */}
         <aside
           className="panel"
           style={{
