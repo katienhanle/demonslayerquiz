@@ -100,14 +100,25 @@ body {
   }
   
   .customize-grid {
-    display: grid;
-    grid-template-columns: 1.1fr 1fr;
-    gap: 24px;
-  }
-  @media (max-width: 900px) {
-    .customize-grid { grid-template-columns: 1fr; }
-  }
-  
+        display: grid;
+        grid-template-columns: 1.1fr 1fr;
+        grid-template-areas: "controls preview";
+        gap: 24px;
+        align-items: start;
+      }
+      .controls-panel { grid-area: controls; }
+      .preview-panel  { grid-area: preview; display: flex; justify-content: center; }
+     
+      /* Phones/tablets: preview on top, then controls; tighter spacing */
+      @media (max-width: 900px) {
+        .customize-grid {
+          grid-template-columns: 1fr;
+          grid-template-areas:
+            "preview"
+            "controls";
+          gap: 12px;
+        }
+      }
   .customize-panel {
     display: grid;
     gap: 16px;
@@ -418,8 +429,9 @@ body {
   
   /* So panels don't look cramped on phones */
   @media (max-width: 740px) {
-    .panel { padding: 12px; border-radius: 14px; }
-  }
+    .panel { padding: 10px; border-radius: 14px; }
+    .preview-card { margin: 0; } /* ensure no extra vertical margin */
+     }
   
   /* Avatar preview: scale down from 192 → 128 on narrow phones */
   @media (max-width: 480px) {

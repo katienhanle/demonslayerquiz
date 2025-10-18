@@ -116,7 +116,7 @@ export default function CustomizePage() {
 
         <div className="customize-grid">
           {/* LEFT: controls */}
-          <section className="customize-panel panel">
+          <section className="customize-panel panel controls-panel">
             {/* Hair style */}
             <div className="row">
               <label className="row-label">Hair Style</label>
@@ -166,7 +166,7 @@ export default function CustomizePage() {
           </section>
 
           {/* RIGHT: preview */}
-          <section className="panel">
+          <section className="panel preview-panel">
             <div className="preview-card">
               <AvatarComposer
                 avatar={{
