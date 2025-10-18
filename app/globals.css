@@ -3,10 +3,44 @@
 
 html, body { height: 100%; }
 body {
-  margin: 0;
-  background: linear-gradient(#0b0b0b, #1b1b1b);
-  color: #fff;
-}
+    margin: 0;
+    color: #fff;
+  
+    /* 1️⃣ Base animated gradient */
+    background: linear-gradient(135deg, #2b0040, #390024);
+    background-size: 400% 400%;
+    animation: gradientShift 5s ease infinite;
+  
+    /* 2️⃣ Pixel-dither overlay (checker texture) */
+    position: relative;
+    isolation: isolate;
+  }
+  
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+  
+    /* Repeating pixel texture */
+    background-image: 
+      repeating-conic-gradient(
+        from 45deg,
+        rgba(255,255,255,0.03) 0deg 90deg,
+        rgba(0,0,0,0.03) 90deg 180deg
+      );
+    background-size: 4px 4px; /* adjust pixel density */
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+  
+  @keyframes gradientShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  
 
 /* === Landing Page === */
 .landing-wrap {
@@ -18,7 +52,7 @@ body {
     text-align: center;
     padding: 32px;
     color: #fff;
-    background: linear-gradient(#0b0b0b, #1b1b1b);
+    background: transparent;
     position: relative;
   }
   
@@ -77,7 +111,7 @@ body {
     place-items: center;
     padding: 24px;
     color: #fff;
-    background: linear-gradient(#0b0b0b, #1b1b1b);
+    background: transparent;
   }
   
   .customize-card {
@@ -187,7 +221,14 @@ body {
     display: flex;
     gap: 12px;
     margin-top: 8px;
+    justify-content: space-between; /* evenly spread Back + Next */
   }
+  
+  /* if there's only one button (like first question), push it to the right */
+  .actions .btn:first-child:last-child {
+    margin-left: auto;
+  }
+  
   .btn {
     display: inline-block;
     padding: 12px 18px;
@@ -291,7 +332,7 @@ body {
     place-items: center;
     padding: 24px;
     color: #fff;
-    background: linear-gradient(#0b0b0b, #1b1b1b);
+    background: transparent;
   }
   
   .box {
@@ -371,8 +412,14 @@ body {
   .nav-buttons {
     display: flex;
     gap: 12px;
-    justify-content: space-between;
+    align-items: center;
   }
+  
+  /* Always push Next to the right on desktop when Back is missing */
+  .nav-buttons .next {
+    margin-left: auto;
+  }
+  
   
   /* Keep side by side on desktop */
   @media (min-width: 901px) {
@@ -381,14 +428,17 @@ body {
     }
   }
   
-  /* Stack on mobile: NEXT on top, BACK below */
   @media (max-width: 900px) {
     .nav-buttons {
       flex-direction: column-reverse;
       gap: 10px;
+      align-items: stretch;   /* new: make both buttons full width */
+    }
+    .nav-buttons .next {
+      margin-left: 0;         /* new: reset the desktop push-right */
     }
   }
-    
+  
   /* Result chips */
 .meta-label {
     font-weight: 700;
