@@ -1,0 +1,481 @@
+/* globals.css */
+@import url('https://fonts.googleapis.com/css2?family=Jersey+25&display=swap');
+
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: linear-gradient(#0b0b0b, #1b1b1b);
+  color: #fff;
+}
+
+/* === Landing Page === */
+.landing-wrap {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 32px;
+    color: #fff;
+    background: linear-gradient(#0b0b0b, #1b1b1b);
+    position: relative;
+  }
+  
+  .landing-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .landing-footer {
+    font-size: 12px;
+    opacity: 0.4;
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    line-height: 1.5;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  
+/* simple utility classes */
+.main-center {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 24px;
+}
+
+.btn {
+  display: inline-block;
+  font-family: 'Jersey 25', sans-serif;
+  letter-spacing: 0.03em;
+  background: #fff;
+  color: #000;
+  font-weight: 800;
+  padding: 12px 24px;
+  border-radius: 12px;
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,.25);
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+}
+.btn:hover { background:#e5e5e5; box-shadow: 0 8px 20px rgba(0,0,0,.35); }
+.btn:active { transform: scale(.98); }
+
+/* === Customize Page Layout === */
+.customize-wrap {
+    min-height: 100dvh;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    color: #fff;
+    background: linear-gradient(#0b0b0b, #1b1b1b);
+  }
+  
+  .customize-card {
+    width: min(1100px, 92vw);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 10px 40px rgba(0,0,0,.35);
+    backdrop-filter: blur(8px);
+  }
+  
+  .customize-header h1 {
+    font-size: clamp(28px, 4.5vw, 40px);
+    margin: 0 0 8px 0;
+  }
+  .customize-header p {
+    margin: 0 0 20px 0;
+    color: rgba(255,255,255,.75);
+  }
+  
+  .customize-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 24px;
+  }
+  @media (max-width: 900px) {
+    .customize-grid { grid-template-columns: 1fr; }
+  }
+  
+  .customize-panel {
+    display: grid;
+    gap: 16px;
+    align-content: start;
+  }
+  
+  /* Rows */
+  .row {
+    display: grid;
+    grid-template-columns: 140px 1fr auto;
+    align-items: center;
+    gap: 12px;
+  }
+  .row-label {
+    font-weight: 800;
+    letter-spacing: .02em;
+  }
+  
+  /* Steppers */
+  .stepper {
+    display: grid;
+    grid-template-columns: 44px 1fr 44px;
+    gap: 8px;
+    align-items: center;
+  }
+  .step {
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.08);
+    color: #fff;
+    font-weight: 900;
+    cursor: pointer;
+    transition: transform .12s ease, background .12s ease;
+  }
+  .step:hover { background: rgba(255,255,255,.16); }
+  .step:active { transform: translateY(1px); }
+  
+  .step-value {
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.06);
+    font-weight: 700;
+    letter-spacing: .02em;
+  }
+  
+  /* Colors */
+  .color-input {
+    width: 56px;
+    height: 44px;
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 10px;
+    background: transparent;
+    padding: 0;
+  }
+  .swatch-text {
+    opacity: .75;
+    font-size: 14px;
+  }
+  
+  /* Actions */
+  .actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .btn {
+    display: inline-block;
+    padding: 12px 18px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 900;
+    letter-spacing: .02em;
+    border: 1px solid rgba(255,255,255,.14);
+    transition: transform .12s ease, background .12s ease, box-shadow .12s ease;
+  }
+  .btn.primary {
+    background: #ffffff;
+    color: #000;
+    box-shadow: 0 6px 18px rgba(0,0,0,.35);
+  }
+  .btn.primary:hover { background: #eaeaea; }
+  .btn.ghost {
+    background: rgba(255,255,255,.06);
+    color: #fff;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  
+  .btn.return-home {
+    font-family: 'Jersey 25', sans-serif;
+    letter-spacing: 0.03em;
+  }
+  
+  /* Preview */
+  .customize-preview {
+    display: grid;
+    gap: 16px;
+    align-content: start;
+  }
+  .preview-card {
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 16px;
+    background: rgba(255,255,255,.06);
+    min-height: 220px;
+  }
+  .thumbs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .thumbs canvas {
+    width: 96px !important;
+    height: 96px !important;
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 10px;
+    background: rgba(0,0,0,.25);
+  }
+  
+  /* Make the main preview nice and big (AvatarComposer default is ~192px) */
+  .preview-card canvas {
+    width: 192px !important;
+    height: 192px !important;
+    image-rendering: pixelated;
+  }
+  .eye-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+    gap: 8px;
+  }
+  
+  .eye-thumb {
+    border: 2px solid transparent;
+    background: rgba(255,255,255,.08);
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 4px;
+    transition: all .15s ease;
+  }
+  
+  .eye-thumb:hover {
+    background: rgba(255,255,255,.15);
+  }
+  
+  .eye-thumb.active {
+    border-color: #ffffff;
+    background: rgba(255,255,255,.2);
+  }
+  
+  /* Shared screen wrapper + box */
+.screen-wrap {
+    min-height: 100dvh;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    color: #fff;
+    background: linear-gradient(#0b0b0b, #1b1b1b);
+  }
+  
+  .box {
+    width: min(1100px, 92vw);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 10px 40px rgba(0,0,0,.35);
+    backdrop-filter: blur(8px);
+  }
+  
+  /* Customize page grid */
+  .customize-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 24px; }
+  @media (max-width: 900px) { .customize-grid { grid-template-columns: 1fr; } }
+  
+  /* Quiz page grid (avatar left, questions right) */
+  .quiz-grid { display: grid; grid-template-columns: 280px 1fr; gap: 24px; align-items: start; }
+  @media (max-width: 900px) { .quiz-grid { grid-template-columns: 1fr; } }
+  
+  /* Panel/card styles reused on both screens */
+  .panel {
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 16px;
+    padding: 16px;
+  }
+  
+  .preview-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent; /* or rgba(255,255,255,0.02) if you still want subtle depth */
+    border-radius: 12px;
+    border: none; /* ← removes that white outline */
+    padding: 0; /* tighten spacing around the avatar */
+  }
+  
+  .preview-card canvas { width: 192px !important; height: 192px !important; image-rendering: pixelated; }
+  
+  /* --- Transition from Customize -> Quiz --- */
+  .fade-out { animation: fadeOut 600ms ease forwards; }
+  @keyframes fadeOut { to { opacity: 0; filter: blur(4px); transform: scale(.98); } }
+
+
+  
+  /* Buttons (reuse your previous ones if you have them) */
+  .btn { display:inline-block; padding:12px 18px; border-radius:12px; text-decoration:none;
+    font-weight:900; border:1px solid rgba(255,255,255,.14); transition:transform .12s, background .12s, box-shadow .12s; }
+  .btn.primary { background:#fff; color:#000; box-shadow:0 6px 18px rgba(0,0,0,.35); }
+  .btn.primary:hover { background:#eaeaea; }
+  .btn.ghost { background:rgba(255,255,255,.06); color:#fff; }
+
+  /* slide transitions for page boxes */
+.slide-out-left {
+    animation: slideOutLeft 500ms cubic-bezier(.22,.8,.22,1) forwards;
+  }
+  @keyframes slideOutLeft {
+    from { opacity: 1; transform: translateX(0); }
+    to   { opacity: 0; transform: translateX(-60px); }
+  }
+  
+  .slide-in-right {
+    animation: slideInRight 500ms cubic-bezier(.22,.8,.22,1) forwards;
+  }
+  @keyframes slideInRight {
+    from { opacity: 0; transform: translateX(60px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  
+  /* (optional) reverse directions if you ever need them */
+  .slide-out-right { animation: slideOutRight 500ms cubic-bezier(.22,.8,.22,1) forwards; }
+  @keyframes slideOutRight { from{opacity:1;transform:translateX(0)} to{opacity:0;transform:translateX(60px)} }
+  .slide-in-left   { animation: slideInLeft  500ms cubic-bezier(.22,.8,.22,1) forwards; }
+  @keyframes slideInLeft  { from{opacity:0;transform:translateX(-60px)} to{opacity:1;transform:translateX(0)} }
+  
+  /* Result chips */
+.meta-label {
+    font-weight: 700;
+    letter-spacing: .02em;
+    margin-bottom: 6px;
+    color: rgba(255,255,255,.9);
+  }
+  
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem .6rem;
+  }
+  
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.22);
+    background: rgba(255,255,255,.04);
+    font-size: 14px;
+    line-height: 1;
+  }
+  
+  .chip-danger {
+    background: rgba(255, 77, 79, .06);
+  }
+  
+  .chip-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    display: inline-block;
+  }
+
+ /* --- Result page safety tweaks (keeps the outer border wrapped neatly) --- */
+.box {
+    box-sizing: border-box;   /* prevent width/padding surprises */
+    display: flow-root;       /* stops margin collapse inside the .box */
+    padding-bottom: 16px;     /* little breathing room for the border */
+  }
+  
+  .quiz-grid,
+  .panel {
+    margin: 0;                /* ensure inner panels don't push the outer box */
+  }
+  
+  /* (Optional) if you still see a light frame around the avatar preview */
+  .preview-card {
+    border: none;
+    background: transparent;
+    padding: 0;
+  }
+  
+  /* ===== Mobile-first polish ===== */
+
+/* Tighten the container on small screens */
+@media (max-width: 740px) {
+    .screen-wrap { padding: 16px; }
+    .box { width: min(100%, 94vw); padding: 16px; border-radius: 16px; }
+  }
+  
+  /* Stack any 2-col grids into 1 column */
+  @media (max-width: 900px) {
+    .customize-grid { grid-template-columns: 1fr; }
+    .quiz-grid { grid-template-columns: 1fr; }
+  }
+  
+  /* So panels don't look cramped on phones */
+  @media (max-width: 740px) {
+    .panel { padding: 12px; border-radius: 14px; }
+  }
+  
+  /* Avatar preview: scale down from 192 → 128 on narrow phones */
+  @media (max-width: 480px) {
+    .preview-card canvas {
+      width: 128px !important;
+      height: 128px !important;
+    }
+  }
+  
+  /* Question options: bigger tap targets, readable spacing */
+  @media (max-width: 540px) {
+    .quiz-grid label[style] {        /* targets your inline-styled option labels */
+      padding: 14px 14px !important; /* increase touch area */
+      gap: 10px !important;
+    }
+    .quiz-grid input[type="radio"] {
+      width: 22px; height: 22px;     /* easier to tap */
+    }
+  }
+  
+  /* Stepper buttons and chips: compact without feeling tiny */
+  @media (max-width: 540px) {
+    .stepper { grid-template-columns: 40px 1fr 40px; gap: 6px; }
+    .step { height: 40px; }
+    .step-value { height: 40px; }
+    .chip { padding: 6px 9px; font-size: 13px; }
+  }
+  
+  /* Buttons: give them full width when space is tight */
+  @media (max-width: 540px) {
+    .actions, .panel footer[style] {
+      flex-wrap: wrap;
+      gap: 10px !important;
+    }
+    .actions .btn,
+    .panel footer[style] .btn {
+      flex: 1 1 100%;
+      text-align: center;
+    }
+  }
+  
+  /* Landing page: preserve centered hero, keep footer pinned at bottom safely */
+  @supports (padding: max(0px)) {
+    .landing-wrap { padding-bottom: max(32px, env(safe-area-inset-bottom)); }
+    .landing-footer { padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+  }
+  
+  @media (max-width: 520px) {
+    .landing-footer {
+      font-size: 11px;
+      opacity: 0.38;   /* a touch lighter on mobile */
+      padding: 12px 16px;
+    }
+  }
+  
+  /* Ensure the outer border always wraps content on small screens too */
+  .box { box-sizing: border-box; display: flow-root; padding-bottom: 16px; }
+  .quiz-grid, .panel { margin: 0; }
+  
