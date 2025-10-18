@@ -103,7 +103,7 @@ export default function QuizPage() {
           <section className="panel">
             <header style={{ marginBottom: 12 }}>
               <h1 style={{ fontSize: "clamp(24px, 3.5vw, 36px)", margin: 0 }}>
-                Which Demon Slayer are you?
+                Slayer Exam
               </h1>
               <p style={{ color: "rgba(255,255,255,.7)", margin: "6px 0 0" }}>
                 Question {index + 1} of {total}

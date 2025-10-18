@@ -524,63 +524,49 @@ body {
     .result-grid { grid-template-columns: 1fr; }
   }
   
-
-/* === Mobile quiz layout tightening === */
+/* === Mobile: put avatar higher + reduce space under it === */
 @media (max-width: 900px) {
+    /* Less top padding overall (respect iOS safe area) */
     .screen-wrap {
-      padding: 8px 0 !important; /* tighten top & bottom */
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start; /* keep content visible near top */
+      padding-top: max(4px, env(safe-area-inset-top));
+      padding-bottom: 8px;
     }
   
-    .box {
-      margin: 0 auto;
-      padding: 12px 10px !important;
-      max-width: 95%;
-    }
+    /* Tighter inner container */
+    .box { padding: 12px 10px; }
   
-    /* Pull avatar + question box closer together */
+    /* Stack quiz sections tightly, preview above questions */
     .quiz-grid {
-      display: flex;
+      display: flex;           /* overrides the 2-col grid on mobile */
       flex-direction: column;
       align-items: center;
-      gap: 8px; /* smaller gap between preview and question box */
-    }
+      gap: 6px;                /* smaller gap between preview and question panel */
+    } /* your quiz-grid is defined here already; this refines mobile rules. :contentReference[oaicite:0]{index=0} */
   
-    /* Remove extra padding from avatar panel */
+    /* Make the avatar panel hug the canvas (no grey padding/frame) */
     .quiz-grid .panel:first-child {
-      padding: 0;
-      background: transparent;
-      border: none;
-    }
+      padding: 0;              /* remove panel padding around avatar */
+      background: transparent; /* remove grey background */
+      border: none;            /* remove border so it truly “hugs” */
+      margin-bottom: 2px;      /* minimal space before the question card */
+    } /* panel defaults sit here; we’re overriding for the first panel only. :contentReference[oaicite:1]{index=1} */
   
-    /* Slightly reduce avatar size */
-    .preview-card {
+    /* Slightly smaller avatar to win more room */
+    .preview-card { padding: 0; }
+    .preview-card canvas {
       width: 128px !important;
       height: 128px !important;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 6px;
-    }
+    } /* preview sizing hook exists already; we’re enforcing the smaller size. :contentReference[oaicite:2]{index=2} */
   
-    /* Compress question box padding */
+    /* Compact the question card so the options rise up */
     .quiz-grid .panel:nth-child(2) {
       padding: 10px;
-      margin-top: 0;
     }
   
-    /* Buttons stay visible without scrolling */
-    .nav-buttons {
-      position: sticky;
-      bottom: 8px;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(4px);
-      border-radius: 12px;
-      padding: 8px;
-      z-index: 10;
+    /* If you’re using the sticky Next/Back, keep a SMALL reserved space only */
+    :root { --navH: 88px; }  /* was ~118px; smaller so more options show */
+    .quiz-grid .panel:nth-child(2) {
+      padding-bottom: calc(var(--navH) + 8px);
     }
   }
   
