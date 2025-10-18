@@ -12,7 +12,7 @@ export default function QuizPage() {
   const [answers, setAnswers] = useState({});
   const [index, setIndex] = useState(0);
 
-  // Keep avatar in sync (initial load + same-tab updates)
+  // Keep avatar in sync (read once; update on cross-tab storage events)
   const [avatar, setAvatar] = useState(null);
   useEffect(() => {
     const readAvatar = () => {
@@ -27,19 +27,15 @@ export default function QuizPage() {
     // initial read
     readAvatar();
 
-    // 'storage' doesn't fire in the same tab, but keep it anyway for cross-tabs
+    // cross-tab updates only (no polling → fixes preview flicker)
     const onStorage = (e) => {
       if (e?.key && e.key !== "avatar") return;
       readAvatar();
     };
     window.addEventListener("storage", onStorage);
 
-    // polling fallback so same-tab changes are reflected
-    const id = setInterval(readAvatar, 250);
-
     return () => {
       window.removeEventListener("storage", onStorage);
-      clearInterval(id);
     };
   }, []);
 
@@ -93,7 +89,11 @@ export default function QuizPage() {
       <div className={`box ${enterAnim ? "slide-in-right" : ""}`}>
         <div className="quiz-grid">
           {/* Left: avatar preview (matches Result layout: 192x192) */}
-          <aside className="panel" aria-label="Your avatar" style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <aside
+            className="panel"
+            aria-label="Your avatar"
+            style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+          >
             <div className="preview-card" style={{ width: 192, height: 192, position: "relative" }}>
               <AvatarComposer avatar={avatar || {}} />
             </div>
@@ -144,21 +144,17 @@ export default function QuizPage() {
               })}
             </div>
 
+            {/* Buttons: desktop side-by-side; mobile stacks with Next on top, Back below */}
             <footer className="nav-buttons">
-                {index > 0 && (
-                    <button onClick={goBack} className="btn ghost back">
-                    Back
-                    </button>
-                )}
-                <button
-                    onClick={goNext}
-                    className="btn primary next"
-                    disabled={!canGoNext}
-                >
-                    {index === total - 1 ? "See Result" : "Next"}
+              {index > 0 && (
+                <button onClick={goBack} className="btn ghost back">
+                  Back
                 </button>
-                </footer>
-
+              )}
+              <button onClick={goNext} className="btn primary next" disabled={!canGoNext}>
+                {index === total - 1 ? "See Result" : "Next"}
+              </button>
+            </footer>
           </section>
         </div>
       </div>
