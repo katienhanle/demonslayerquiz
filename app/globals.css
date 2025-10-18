@@ -526,3 +526,40 @@ body {
   
 
 
+
+  /* === Mobile avatar spacing fix === */
+@media (max-width: 900px) {
+    /* Stack quiz sections tighter vertically */
+    .quiz-grid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px; /* smaller vertical space */
+    }
+  
+    /* Make the avatar panel hug the content box */
+    .quiz-grid .panel:first-child {
+      padding: 8px;
+      background: transparent; /* removes grey box */
+      border: none;
+    }
+  
+    /* Shrink the preview slightly for small screens */
+    .preview-card {
+      width: auto;
+      height: auto;
+      display: flex;
+      justify-content: center;
+    }
+  
+    .preview-card canvas {
+      width: 128px !important;
+      height: 128px !important;
+    }
+  
+    /* Ensure the question box comes right after */
+    .quiz-grid .panel:nth-child(2) {
+      margin-top: 0;
+    }
+  }
+  
