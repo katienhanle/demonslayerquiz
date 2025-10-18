@@ -12,31 +12,24 @@ export default function QuizPage() {
   const [answers, setAnswers] = useState({});
   const [index, setIndex] = useState(0);
 
-  // Keep avatar in sync (read once; update on cross-tab storage events)
+  // Read avatar once; update only on cross-tab storage changes
   const [avatar, setAvatar] = useState(null);
   useEffect(() => {
     const readAvatar = () => {
       try {
         const raw = localStorage.getItem("avatar");
         if (!raw) return;
-        const parsed = JSON.parse(raw);
-        setAvatar(parsed);
+        setAvatar(JSON.parse(raw));
       } catch {}
     };
-
-    // initial read
     readAvatar();
 
-    // cross-tab updates only (no polling → fixes preview flicker)
     const onStorage = (e) => {
       if (e?.key && e.key !== "avatar") return;
       readAvatar();
     };
     window.addEventListener("storage", onStorage);
-
-    return () => {
-      window.removeEventListener("storage", onStorage);
-    };
+    return () => window.removeEventListener("storage", onStorage);
   }, []);
 
   // Slide-in animation when arriving from Customize
@@ -71,12 +64,11 @@ export default function QuizPage() {
     if (index < total - 1) {
       setIndex((i) => i + 1);
     } else {
-      // final save + route
       try {
         localStorage.setItem("dsq_answers_final", JSON.stringify(answers));
         localStorage.removeItem("dsq_answers_progress");
       } catch {}
-      router.push("/result");
+      router.push("/demographics");
     }
   }
 
@@ -93,17 +85,18 @@ export default function QuizPage() {
             className="panel"
             aria-label="Your avatar"
             style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
-          >
+            >
             <div className="preview-card" style={{ width: 192, height: 192, position: "relative" }}>
-              <AvatarComposer avatar={avatar || {}} />
+                <AvatarComposer avatar={avatar ?? null} />
             </div>
-          </aside>
+            </aside>
+
 
           {/* Right: question box */}
           <section className="panel">
             <header style={{ marginBottom: 12 }}>
               <h1 style={{ fontSize: "clamp(24px, 3.5vw, 36px)", margin: 0 }}>
-                Slayer Exam
+                Corps Exam
               </h1>
               <p style={{ color: "rgba(255,255,255,.7)", margin: "6px 0 0" }}>
                 Question {index + 1} of {total}

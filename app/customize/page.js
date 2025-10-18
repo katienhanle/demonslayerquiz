@@ -9,7 +9,10 @@ import { useRouter } from "next/navigation";
 // Adjust these to match your files
 const HAIR_STYLES = [
   "hair_1","hair_2","hair_3","hair_4",
-  "hair_5","hair_6","hair_7","hair_8"
+  "hair_5","hair_6","hair_7","hair_8",
+  "hair_9","hair_10","hair_11","hair_12",
+  "hair_13","hair_14","hair_15","hair_16", "hair_17",
+  "hair_18", "hair_19",
 ];
 const EYE_STYLES  = [
   "eyes_1","eyes_2","eyes_3","eyes_4",

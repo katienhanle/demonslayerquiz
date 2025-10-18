@@ -1,20 +1,28 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 
 export default function HomePage() {
+  // Clear leftover session/localStorage flags
+  useEffect(() => {
+    sessionStorage.removeItem("enterFromCustomize");
+    sessionStorage.removeItem("fromQuiz");
+    localStorage.removeItem("dsq_demos_draft");
+  }, []);
+
   return (
     <main className="landing-wrap">
       <div className="landing-content">
         <h1
           style={{
             fontFamily: "'Jersey 25', sans-serif",
-            fontSize: "clamp(44px, 8vw, 96px)",
+            fontSize: "clamp(44px, 8vw, 70px)",
             marginBottom: "1rem",
             lineHeight: 1.1,
           }}
         >
-          Demon Slayer-Inspired Quiz
+          Demon Slayer-Inspired Personality Quiz
         </h1>
         <p
           style={{
@@ -23,7 +31,7 @@ export default function HomePage() {
             marginBottom: "2rem",
           }}
         >
-          Find your style.
+          Inspired by Demon Slayer. Find your breathing style.
         </p>
 
         <Link href="/customize" className="btn primary">
@@ -35,10 +43,10 @@ export default function HomePage() {
       <footer className="landing-footer">
         <p>
           All Style names and descriptions are original creations by{" "}
-          <strong>Katie L.</strong>. Inspired by elemental and folkloric motifs from
-          East Asian storytelling traditions. This fan-made project is not
-          affiliated with or endorsed by any existing anime or manga franchise. Pixel art
-          is also done by site creator.
+          <strong>Katie L.</strong>. Inspired by elemental and folkloric motifs
+          from East Asian storytelling traditions. This fan-made project is not
+          affiliated with or endorsed by any existing anime or manga franchise.
+          Pixel art is also done by site creator.
         </p>
       </footer>
     </main>

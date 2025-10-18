@@ -222,14 +222,25 @@ body {
     align-content: start;
   }
   .preview-card {
-    display: grid;
-    place-items: center;
-    padding: 16px;
-    border: 1px solid rgba(255,255,255,.14);
-    border-radius: 16px;
-    background: rgba(255,255,255,.06);
-    min-height: 220px;
-  }
+    position: relative;
+    width: 192px;
+    height: 192px;
+    border-radius: 8px;
+    /* draw the white frame on the wrapper so both layers align perfectly */
+    outline: 2px solid rgba(255,255,255,0.9);
+    outline-offset: -2px; /* sits inside the rounded corner */
+    overflow: hidden;
+    }
+    .preview-card .image-pixel,
+    .preview-card .overlay-pixel {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    image-rendering: pixelated;
+    pointer-events: none;
+    }
   .thumbs {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -568,5 +579,117 @@ body {
     .quiz-grid .panel:nth-child(2) {
       padding-bottom: calc(var(--navH) + 8px);
     }
+  }
+  
+
+/* === Landing layout fix === */
+.landing-wrap {
+    min-height: 100vh;             /* take full screen */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* pushes footer up */
+    align-items: center;
+    text-align: center;
+    padding: 4vh 2rem 2vh;         /* less bottom padding */
+  }
+  
+  .landing-content {
+    flex: 1;                       /* content grows but allows footer to stay visible */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .landing-footer {
+    max-width: 700px;
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    opacity: 0.2;
+    line-height: 1.5;
+  }
+
+/* === Better color swatch for the Customize page === */
+.color-input {
+    /* size */
+    width: 44px;
+    height: 44px;
+  
+    /* remove default UI chrome */
+    -webkit-appearance: none;
+    appearance: none;
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+  
+    /* big white frame + subtle inner edge */
+    border: 3px solid #fff;
+    box-shadow:
+      inset 0 0 0 2px rgba(0,0,0,0.35), /* inner contrast edge */
+      0 0 10px rgba(255,255,255,0.25);  /* soft glow on dark bg */
+  }
+  
+  /* Make the actual swatch fill the box perfectly on WebKit */
+  .color-input::-webkit-color-swatch-wrapper { padding: 0; border-radius: 8px; }
+  .color-input::-webkit-color-swatch {
+    border: none;               /* rely on our outer border */
+    border-radius: 6px;         /* slight inset rounding */
+  }
+  
+  /* Hover/focus states for nice feedback */
+  .color-input:hover {
+    box-shadow:
+      inset 0 0 0 2px rgba(0,0,0,0.35),
+      0 0 12px rgba(255,255,255,0.35);
+  }
+  .color-input:focus-visible {
+    outline: 3px solid rgba(255,255,255,0.9);
+    outline-offset: 2px;
+  }
+  
+  /* Slightly larger for touch screens */
+  @media (max-width: 900px) {
+    .color-input { width: 52px; height: 52px; border-width: 4px; }
+  }
+/* Demographics form layout */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 16px;
+    margin-top: 8px;
+  }
+  .form-grid .span-2 { grid-column: span 2; }
+  
+  .form-label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #fff;
+  }
+  
+  .input {
+    width: 100%;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.06);
+    color: #fff;
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+  
+  .input::placeholder { color: rgba(255,255,255,0.6); }
+  
+  .form-hint { color: rgba(255,255,255,0.8); line-height: 1.35; }
+  
+  .form-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 6px;
+  }
+  
+  /* Mobile */
+  @media (max-width: 900px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .form-grid .span-2 { grid-column: span 1; }
   }
   
