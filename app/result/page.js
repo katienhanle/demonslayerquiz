@@ -1,7 +1,4 @@
 // app/result/page.js
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
@@ -10,12 +7,7 @@ import AvatarComposer from "@/components/AvatarComposer";
 import { score } from "@/lib/scoring";
 import { STYLES, MBTI_TO_STYLE } from "@/lib/styles";
 
-const ANSWER_KEYS = [
-  "dsq_answers_final",
-  "dsq_answers_progress",
-  "quiz_answers",
-  "answers",
-];
+const ANSWER_KEYS = ["dsq_answers_final","dsq_answers_progress","quiz_answers","answers"];
 
 function readSavedAnswers() {
   for (const key of ANSWER_KEYS) {
@@ -23,9 +15,7 @@ function readSavedAnswers() {
       const raw = localStorage.getItem(key);
       if (!raw) continue;
       const parsed = JSON.parse(raw);
-      if (parsed && typeof parsed === "object" && Object.keys(parsed).length) {
-        return parsed;
-      }
+      if (parsed && typeof parsed === "object" && Object.keys(parsed).length) return parsed;
     } catch {}
   }
   return null;
@@ -39,7 +29,6 @@ export default function ResultPage() {
   const [styleKey, setStyleKey] = useState("");
   const [error, setError] = useState("");
 
-  // Load avatar + compute result
   useEffect(() => {
     try {
       const a = localStorage.getItem("avatar");
@@ -54,25 +43,12 @@ export default function ResultPage() {
       }
 
       const s = score(answers);
-      if (!s) {
-        setError("Scoring returned no result. Please retry the quiz.");
-        return;
-      }
+      if (!s) { setError("Scoring returned no result. Please retry the quiz."); return; }
 
       let key = s.styleKey;
-      if (!key && s.mbti) {
-        key = MBTI_TO_STYLE[String(s.mbti).toUpperCase()];
-      }
-      if (!key) {
-        setError("Could not resolve a style key from scoring output.");
-        setResult(s);
-        return;
-      }
-      if (!STYLES[key]) {
-        setError(`Unknown style key: ${key}. Add it to STYLES.`);
-        setResult(s);
-        return;
-      }
+      if (!key && s.mbti) key = MBTI_TO_STYLE[String(s.mbti).toUpperCase()];
+      if (!key) { setError("Could not resolve a style key from scoring output."); setResult(s); return; }
+      if (!STYLES[key]) { setError(`Unknown style key: ${key}. Add it to STYLES.`); setResult(s); return; }
 
       setResult(s);
       setStyleKey(key);
@@ -80,7 +56,7 @@ export default function ResultPage() {
       console.error("[result] scoring failed:", e);
       setError("Scoring failed. Please retry the quiz.");
     }
-  }, []); // ← no `debug` here
+  }, []);
 
   if (!result && !error) {
     return (
@@ -97,12 +73,8 @@ export default function ResultPage() {
           <h2 style={{ marginTop: 0 }}>Uh oh.</h2>
           <p style={{ opacity: 0.9 }}>{error}</p>
           <div style={{ display: "flex", gap: 12 }}>
-            <button className="btn ghost" onClick={() => router.replace("/quiz")}>
-              Back to Quiz
-            </button>
-            <button className="btn primary" onClick={() => router.replace("/")}>
-              Return Home
-            </button>
+            <button className="btn ghost" onClick={() => router.replace("/quiz")}>Back to Quiz</button>
+            <button className="btn primary" onClick={() => router.replace("/")}>Return Home</button>
           </div>
         </div>
       </main>
@@ -117,15 +89,7 @@ export default function ResultPage() {
 
   return (
     <main className="screen-wrap">
-      <div
-        className="box"
-        style={{
-          borderColor: p1,
-          display: "flow-root",
-          paddingBottom: 16,
-          overflow: "hidden",
-        }}
-      >
+      <div className="box" style={{ borderColor: p1, display: "flow-root", paddingBottom: 16, overflow: "hidden" }}>
         <header style={{ marginBottom: 18 }}>
           <h1 style={{ margin: 0, fontSize: "clamp(28px,4vw,42px)" }}>
             Your Style: <span style={{ color: p1 }}>{style.name}</span>
@@ -135,62 +99,21 @@ export default function ResultPage() {
           </p>
         </header>
 
-        <div
-          className="quiz-grid"
-          style={{
-            margin: 0,
-            gridTemplateColumns: "minmax(240px, 320px) 1fr",
-            gap: "1.75rem",
-            alignItems: "start",
-          }}
-        >
-          {/* Left: avatar + overlay */}
-          <aside
-            className="panel"
-            style={{
-              margin: 0,
-              background: "rgba(255,255,255,.05)",
-              border: `1px solid ${p1}33`,
-              borderRadius: 16,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: 20,
-            }}
-          >
+        <div className="quiz-grid" style={{ margin: 0, gridTemplateColumns: "minmax(240px, 320px) 1fr", gap: "1.75rem", alignItems: "start" }}>
+          <aside className="panel" style={{ margin: 0, background: "rgba(255,255,255,.05)", border: `1px solid ${p1}33`, borderRadius: 16, display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
             <div style={{ position: "relative", width: 192, height: 192, lineHeight: 0 }}>
               <AvatarComposer avatar={avatar || {}} />
               <img
                 src={`/assets/overlays/${style.key.toLowerCase()}_overlay.png`}
                 alt={`${style.name} overlay`}
                 onError={(e) => { e.currentTarget.style.display = "none"; }}
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  width: "100%",
-                  height: "100%",
-                  imageRendering: "pixelated",
-                  pointerEvents: "none",
-                  display: "block",
-                }}
+                style={{ position: "absolute", inset: 0, width: "100%", height: "100%", imageRendering: "pixelated", pointerEvents: "none", display: "block" }}
               />
             </div>
           </aside>
 
-          {/* Right: description + chips + CTA */}
-          <section
-            className="panel"
-            style={{
-              margin: 0,
-              background: `linear-gradient(180deg, ${p1}22, ${p2}11)`,
-              border: `1px solid ${p1}55`,
-              borderRadius: 16,
-              padding: 22,
-            }}
-          >
-            <p style={{ marginTop: 0, lineHeight: 1.65, opacity: .92, whiteSpace: "pre-line" }}>
-              {style.description}
-            </p>
+          <section className="panel" style={{ margin: 0, background: `linear-gradient(180deg, ${p1}22, ${p2}11)`, border: `1px solid ${p1}55`, borderRadius: 16, padding: 22 }}>
+            <p style={{ marginTop: 0, lineHeight: 1.65, opacity: .92, whiteSpace: "pre-line" }}>{style.description}</p>
 
             <div className="meta-rows" style={{ display: "grid", gap: 14, marginTop: 18 }}>
               {allies.length > 0 && (
@@ -206,28 +129,19 @@ export default function ResultPage() {
                   </div>
                 </div>
               )}
-
               {clashes.length > 0 && (
                 <div>
                   <div className="meta-label">Tends to clash with</div>
                   <div className="chip-row">
                     {clashes.map((s) => (
-                      <span
-                        key={s.key}
-                        className="chip chip-danger"
-                        style={{ borderColor: `${s.palette[0]}66` }}
-                      >
-                        <i
-                          className="chip-dot"
-                          style={{ background: s.palette[0], boxShadow: `0 0 0 2px ${s.palette[0]}33 inset` }}
-                        />
+                      <span key={s.key} className="chip chip-danger" style={{ borderColor: `${s.palette[0]}66` }}>
+                        <i className="chip-dot" style={{ background: s.palette[0], boxShadow: `0 0 0 2px ${s.palette[0]}33 inset` }} />
                         {s.name}
                       </span>
                     ))}
                   </div>
                 </div>
               )}
-
               {style.rank && (
                 <div>
                   <div className="meta-label">Corps role</div>
@@ -242,11 +156,7 @@ export default function ResultPage() {
             </div>
 
             <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 24 }}>
-              <button
-                className="btn primary return-home"
-                style={{ background: p1, borderColor: p1 }}
-                onClick={() => router.push("/")}
-              >
+              <button className="btn primary return-home" style={{ background: p1, borderColor: p1 }} onClick={() => router.push("/")}>
                 Return Home
               </button>
             </div>
