@@ -742,28 +742,32 @@ body {
     .form-grid { grid-template-columns: 1fr; }
     .form-grid .span-2 { grid-column: span 1; }
   }
-/* === Fix: Center avatar preview on mobile === */
-@media (max-width: 480px) {
-    /* Center the preview panel and its contents */
-    .preview-panel,
-    .quiz-grid .panel:first-child {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+/* --- Mobile centering fix for avatar canvas --- */
+.preview-card {
+    position: relative;
+    box-sizing: border-box;   /* keep border true to size */
+    line-height: 0;           /* kill baseline gap for inline canvases */
+  }
   
-    /* Ensure avatar stays centered horizontally */
+  /* Center whatever the composer renders (canvas/img/svg) perfectly */
+  .preview-card > canvas,
+  .preview-card > img,
+  .preview-card > svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: block;           /* avoids inline baseline issues */
+    margin: 0;
+    image-rendering: pixelated; /* keep crisp pixels */
+  }
+  
+  /* iPhone-size polish: keep the stage square and avoid crowding */
+  @media (max-width: 480px) {
     .preview-card {
-      margin: 0 auto;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-  
-    /* Optional: keep consistent sizing */
-    .preview-card canvas {
-      width: 160px !important;
-      height: 160px !important;
+      width: 180px !important;   /* or 192px if you prefer */
+      height: 180px !important;
+      margin: 0 auto;            /* center the frame itself */
     }
   }
   
