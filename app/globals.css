@@ -525,41 +525,62 @@ body {
   }
   
 
-
-
-  /* === Mobile avatar spacing fix === */
+/* === Mobile quiz layout tightening === */
 @media (max-width: 900px) {
-    /* Stack quiz sections tighter vertically */
+    .screen-wrap {
+      padding: 8px 0 !important; /* tighten top & bottom */
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start; /* keep content visible near top */
+    }
+  
+    .box {
+      margin: 0 auto;
+      padding: 12px 10px !important;
+      max-width: 95%;
+    }
+  
+    /* Pull avatar + question box closer together */
     .quiz-grid {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px; /* smaller vertical space */
+      gap: 8px; /* smaller gap between preview and question box */
     }
   
-    /* Make the avatar panel hug the content box */
+    /* Remove extra padding from avatar panel */
     .quiz-grid .panel:first-child {
-      padding: 8px;
-      background: transparent; /* removes grey box */
+      padding: 0;
+      background: transparent;
       border: none;
     }
   
-    /* Shrink the preview slightly for small screens */
+    /* Slightly reduce avatar size */
     .preview-card {
-      width: auto;
-      height: auto;
-      display: flex;
-      justify-content: center;
-    }
-  
-    .preview-card canvas {
       width: 128px !important;
       height: 128px !important;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 6px;
     }
   
-    /* Ensure the question box comes right after */
+    /* Compress question box padding */
     .quiz-grid .panel:nth-child(2) {
+      padding: 10px;
       margin-top: 0;
+    }
+  
+    /* Buttons stay visible without scrolling */
+    .nav-buttons {
+      position: sticky;
+      bottom: 8px;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      border-radius: 12px;
+      padding: 8px;
+      z-index: 10;
     }
   }
   
