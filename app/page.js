@@ -42,11 +42,11 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="landing-footer">
         <p>
-          All Style names and descriptions are original creations by{" "}
-          <strong>Katie L.</strong>. Inspired by elemental and folkloric motifs
-          from East Asian storytelling traditions. This fan-made project is not
+          All Style names, pixel art, and descriptions are original creations by{" "}
+          <strong>K.L</strong>. Inspired by elemental and folkloric motifs
+          from East Asian storytelling traditions. Fan project for personal/educational use. Heavily inspired by <em>Demon Slayer</em>.
+          No affiliation with or endorsement by the original IP holders. Non-commercial. This fan-made project is not
           affiliated with or endorsed by any existing anime or manga franchise.
-          Pixel art is also done by site creator.
         </p>
       </footer>
     </main>
