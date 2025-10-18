@@ -742,52 +742,28 @@ body {
     .form-grid { grid-template-columns: 1fr; }
     .form-grid .span-2 { grid-column: span 1; }
   }
-  
-/* --- Mobile-only polish (≤480px) --- */
+/* === Fix: Center avatar preview on mobile === */
 @media (max-width: 480px) {
-    /* General spacing tighten */
-    .screen-wrap { padding: 12px; }
-    .box { padding: 14px; }
-  
-    /* Customize page */
-    .customize-grid {
-      grid-template-columns: 1fr;   /* stack preview + controls */
-      gap: 14px;
+    /* Center the preview panel and its contents */
+    .preview-panel,
+    .quiz-grid .panel:first-child {
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-    .preview-panel { order: -1; padding: 12px; } /* preview on top */
+  
+    /* Ensure avatar stays centered horizontally */
     .preview-card {
-      /* override any inline size from pages to stop overflow/jump */
-      width: 160px !important;
-      height: 160px !important;
       margin: 0 auto;
-    }
-    .panel { padding: 14px; } /* softer padding inside cards */
-  
-    /* Tighter rows so controls sit closer to the preview */
-    .controls-panel .row { gap: 10px; }
-  
-    /* Quiz page */
-    .quiz-grid { grid-template-columns: 1fr; gap: 14px; }
-    .quiz-grid .panel { padding: 14px; }
-    .quiz-grid .preview-card {
-      width: 160px !important;
-      height: 160px !important;
-      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   
-    /* Survey: fix textarea spill + ensure fields fit */
-    .form-grid { grid-template-columns: 1fr; gap: 14px; }
-    .form-grid .span-2 { grid-column: auto; }
-    .form-grid select,
-    .form-grid textarea,
-    .input { width: 100%; max-width: 100%; box-sizing: border-box; }
-    .form-grid textarea { resize: vertical; }
-  
-    /* Action rows (buttons) */
-    .actions,
-    .form-actions {
-      gap: 10px;
-      justify-content: space-between; /* keeps Next on right when both show */
+    /* Optional: keep consistent sizing */
+    .preview-card canvas {
+      width: 160px !important;
+      height: 160px !important;
     }
   }
   
