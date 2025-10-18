@@ -144,13 +144,21 @@ export default function QuizPage() {
               })}
             </div>
 
-            <footer style={{ display: "flex", justifyContent: "space-between" }}>
-              {/* Hide Back on the first question */}
-              {index > 0 ? <button onClick={goBack} className="btn ghost">Back</button> : <span />}
-              <button onClick={goNext} className="btn primary" disabled={!canGoNext}>
-                {index === total - 1 ? "See Result" : "Next"}
-              </button>
-            </footer>
+            <footer className="nav-buttons">
+                {index > 0 && (
+                    <button onClick={goBack} className="btn ghost back">
+                    Back
+                    </button>
+                )}
+                <button
+                    onClick={goNext}
+                    className="btn primary next"
+                    disabled={!canGoNext}
+                >
+                    {index === total - 1 ? "See Result" : "Next"}
+                </button>
+                </footer>
+
           </section>
         </div>
       </div>

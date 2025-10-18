@@ -357,6 +357,27 @@ body {
   .slide-in-left   { animation: slideInLeft  500ms cubic-bezier(.22,.8,.22,1) forwards; }
   @keyframes slideInLeft  { from{opacity:0;transform:translateX(-60px)} to{opacity:1;transform:translateX(0)} }
   
+  .nav-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+  }
+  
+  /* Keep side by side on desktop */
+  @media (min-width: 901px) {
+    .nav-buttons {
+      flex-direction: row;
+    }
+  }
+  
+  /* Stack on mobile: NEXT on top, BACK below */
+  @media (max-width: 900px) {
+    .nav-buttons {
+      flex-direction: column-reverse;
+      gap: 10px;
+    }
+  }
+    
   /* Result chips */
 .meta-label {
     font-weight: 700;
@@ -503,3 +524,5 @@ body {
     .result-grid { grid-template-columns: 1fr; }
   }
   
+
+
