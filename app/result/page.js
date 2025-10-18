@@ -1,15 +1,14 @@
 // app/result/page.js
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import AvatarComposer from "@/components/AvatarComposer";
 import { score } from "@/lib/scoring";
 import { STYLES, MBTI_TO_STYLE } from "@/lib/styles";
-
-// prevent prerender/CSR bailout complaints
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
 
 const ANSWER_KEYS = [
   "dsq_answers_final",
@@ -32,17 +31,21 @@ function readSavedAnswers() {
   return null;
 }
 
-function ResultInner() {
+export default function ResultPage() {
   const router = useRouter();
-  const params = useSearchParams();              // ✅ allowed here (inside Suspense)
-  const debug = params?.get("debug") === "1";
-
+  const [debug, setDebug] = useState(false);
   const [avatar, setAvatar] = useState(null);
   const [result, setResult] = useState(null);
   const [styleKey, setStyleKey] = useState("");
   const [error, setError] = useState("");
 
-  // read avatar + answers only on client
+  useEffect(() => {
+    try {
+      const d = new URLSearchParams(window.location.search).get("debug") === "1";
+      setDebug(d);
+    } catch {}
+  }, []);
+
   useEffect(() => {
     try {
       const a = localStorage.getItem("avatar");
@@ -88,11 +91,7 @@ function ResultInner() {
   }, [debug]);
 
   if (!result && !error) {
-    return (
-      <div className="box">
-        <p>Scoring…</p>
-      </div>
-    );
+    return <div className="box"><p>Scoring…</p></div>;
   }
 
   if (error) {
@@ -159,9 +158,7 @@ function ResultInner() {
             <img
               src={`/assets/overlays/${style.key.toLowerCase()}_overlay.png`}
               alt={`${style.name} overlay`}
-              onError={(e) => {
-                e.currentTarget.style.display = "none";
-              }}
+              onError={(e) => { e.currentTarget.style.display = "none"; }}
               style={{
                 position: "absolute",
                 inset: 0,
@@ -255,15 +252,5 @@ function ResultInner() {
         </section>
       </div>
     </div>
-  );
-}
-
-export default function ResultPage() {
-  return (
-    <main className="screen-wrap">
-      <Suspense fallback={<div className="box"><p>Scoring…</p></div>}>
-        <ResultInner />
-      </Suspense>
-    </main>
   );
 }
