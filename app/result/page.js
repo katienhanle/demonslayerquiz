@@ -1,13 +1,18 @@
 // app/result/page.js
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import AvatarComposer from "@/components/AvatarComposer";
 import { score } from "@/lib/scoring";
 import { STYLES, MBTI_TO_STYLE } from "@/lib/styles";
 
-const ANSWER_KEYS = ["dsq_answers_final", "dsq_answers_progress", "quiz_answers", "answers"];
+const ANSWER_KEYS = [
+  "dsq_answers_final",
+  "dsq_answers_progress",
+  "quiz_answers",
+  "answers",
+];
 
 function readSavedAnswers() {
   for (const key of ANSWER_KEYS) {
@@ -15,7 +20,9 @@ function readSavedAnswers() {
       const raw = localStorage.getItem(key);
       if (!raw) continue;
       const parsed = JSON.parse(raw);
-      if (parsed && typeof parsed === "object" && Object.keys(parsed).length) return parsed;
+      if (parsed && typeof parsed === "object" && Object.keys(parsed).length) {
+        return parsed;
+      }
     } catch {}
   }
   return null;
@@ -23,15 +30,22 @@ function readSavedAnswers() {
 
 export default function ResultPage() {
   const router = useRouter();
-  const params = useSearchParams();
-  const debug = params?.get("debug") === "1";
 
   const [avatar, setAvatar] = useState(null);
   const [result, setResult] = useState(null);
   const [styleKey, setStyleKey] = useState("");
   const [error, setError] = useState("");
+  const [debug, setDebug] = useState(false);
 
-  // Load avatar + compute result
+  // Read ?debug=1 from URL on the client (no useSearchParams)
+  useEffect(() => {
+    try {
+      const q = new URLSearchParams(window.location.search);
+      setDebug(q.get("debug") === "1");
+    } catch {}
+  }, []);
+
+  // Load avatar + compute result (client only)
   useEffect(() => {
     try {
       const a = localStorage.getItem("avatar");
@@ -78,7 +92,9 @@ export default function ResultPage() {
   if (!result && !error) {
     return (
       <main className="screen-wrap">
-        <div className="box"><p>Scoring…</p></div>
+        <div className="box">
+          <p>Scoring…</p>
+        </div>
       </main>
     );
   }
@@ -90,8 +106,12 @@ export default function ResultPage() {
           <h2 style={{ marginTop: 0 }}>Uh oh.</h2>
           <p style={{ opacity: 0.9 }}>{error}</p>
           <div style={{ display: "flex", gap: 12 }}>
-            <button className="btn ghost" onClick={() => router.replace("/quiz")}>Back to Quiz</button>
-            <button className="btn primary" onClick={() => router.replace("/")}>Return Home</button>
+            <button className="btn ghost" onClick={() => router.replace("/quiz")}>
+              Back to Quiz
+            </button>
+            <button className="btn primary" onClick={() => router.replace("/")}>
+              Return Home
+            </button>
           </div>
         </div>
       </main>
@@ -110,9 +130,9 @@ export default function ResultPage() {
         className="box"
         style={{
           borderColor: p1,
-          display: "flow-root",  // stops margin collapse
+          display: "flow-root",
           paddingBottom: 16,
-          overflow: "hidden",    // tidy border crop
+          overflow: "hidden",
         }}
       >
         <header style={{ marginBottom: 18 }}>
@@ -120,11 +140,10 @@ export default function ResultPage() {
             Your Style: <span style={{ color: p1 }}>{style.name}</span>
           </h1>
           <p style={{ color: "rgba(255,255,255,.82)", marginTop: 6 }}>
-            {style.tagline} <span style={{ opacity: .7 }}>({style.code})</span>
+            {style.tagline} <span style={{ opacity: 0.7 }}>({style.code})</span>
           </p>
         </header>
 
-        {/* GRID */}
         <div
           className="quiz-grid"
           style={{
@@ -134,7 +153,7 @@ export default function ResultPage() {
             alignItems: "start",
           }}
         >
-          {/* LEFT: Avatar + overlay (exact 192x192 so 32px art scales 6x) */}
+          {/* Left: avatar + overlay */}
           <aside
             className="panel"
             style={{
@@ -153,7 +172,9 @@ export default function ResultPage() {
               <img
                 src={`/assets/overlays/${style.key.toLowerCase()}_overlay.png`}
                 alt={`${style.name} overlay`}
-                onError={(e) => { e.currentTarget.style.display = "none"; }}
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                }}
                 style={{
                   position: "absolute",
                   inset: 0,
@@ -167,7 +188,7 @@ export default function ResultPage() {
             </div>
           </aside>
 
-          {/* RIGHT: Description + chips + CTA */}
+          {/* Right: description + chips + CTA */}
           <section
             className="panel"
             style={{
@@ -178,7 +199,7 @@ export default function ResultPage() {
               padding: 22,
             }}
           >
-            <p style={{ marginTop: 0, lineHeight: 1.65, opacity: .92, whiteSpace: "pre-line" }}>
+            <p style={{ marginTop: 0, lineHeight: 1.65, opacity: 0.92, whiteSpace: "pre-line" }}>
               {style.description}
             </p>
 
@@ -209,7 +230,10 @@ export default function ResultPage() {
                       >
                         <i
                           className="chip-dot"
-                          style={{ background: s.palette[0], boxShadow: `0 0 0 2px ${s.palette[0]}33 inset` }}
+                          style={{
+                            background: s.palette[0],
+                            boxShadow: `0 0 0 2px ${s.palette[0]}33 inset`,
+                          }}
                         />
                         {s.name}
                       </span>
@@ -232,15 +256,22 @@ export default function ResultPage() {
             </div>
 
             <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 24 }}>
-            <button
-              className="btn primary return-home"
-              style={{ background: p1, borderColor: p1 }}
-              onClick={() => router.push("/")}
-            >
-              Return Home
-            </button>
-
+              <button
+                className="btn primary return-home"
+                style={{ background: p1, borderColor: p1 }}
+                onClick={() => router.push("/")}
+              >
+                Return Home
+              </button>
             </div>
+
+            {debug && (
+              <pre style={{ marginTop: 18, opacity: 0.65, whiteSpace: "pre-wrap" }}>
+MBTI: {String(result.mbti || "").toUpperCase()}
+styleKey: {styleKey}
+axes: {JSON.stringify(result.axes || {}, null, 2)}
+              </pre>
+            )}
           </section>
         </div>
       </div>
