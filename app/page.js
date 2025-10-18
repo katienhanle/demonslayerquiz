@@ -22,7 +22,7 @@ export default function HomePage() {
             lineHeight: 1.1,
           }}
         >
-          Demon Slayer-Inspired Personality Quiz
+          Corps Exam (Personality Quiz)
         </h1>
         <p
           style={{
