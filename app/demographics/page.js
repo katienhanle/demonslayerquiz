@@ -36,19 +36,50 @@ export default function DemographicsPage() {
     router.push("/result");
   }
 
-  function submit() {
+  async function submit() {
     setSaving(true);
+  
+    const payload = {
+      age: form.age,
+      gender: form.gender,
+      found_via: form.found_via,
+      feedback: form.feedback,
+      timestamp: new Date().toISOString(),
+      version: "v3-short"
+    };
+  
     try {
-      const payload = {
-        ...form,
-        timestamp: new Date().toISOString(),
-        version: "v3-short",
-      };
+      // Keep your local copy
       localStorage.setItem("dsq_demographics", JSON.stringify(payload));
       localStorage.removeItem("dsq_demos_draft");
-    } catch {}
-    router.push("/result");
+  
+      // Send as application/x-www-form-urlencoded to avoid CORS preflight
+      const body = new URLSearchParams(payload).toString();
+  
+      const res = await fetch(
+        "https://script.google.com/macros/s/AKfycbwNtLs8TxPQt0DAPqJMLwzkws1BXZG4oRqCCAIQdtz9y5r1IzIBAHhwIjve1PXNNwq_/exec",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+          body
+        }
+      );
+  
+      // Optional: check ok, but Apps Script usually returns 200
+      if (!res.ok) throw new Error("Non-200 from webhook");
+  
+      // You can skip parsing if your script returns plain text; if JSON, uncomment:
+      // const data = await res.json();
+      // console.log("Webhook response:", data);
+  
+      router.push("/result");
+    } catch (err) {
+      console.error("Error submitting survey:", err);
+      alert("There was a problem saving your response. Please try again later.");
+      setSaving(false);
+    }
   }
+  
 
   return (
     <main className="screen-wrap">
