@@ -797,18 +797,31 @@ body {
     padding: 10px 14px;
   }
 }
-/* ===== Customize page: mobile buttons ===== */
+/* === Customize page buttons (scoped, safe) === */
+
+/* Desktop: Back stays left, Continue on the right */
+.customize-panel .customize-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  align-items: center;
+}
+.customize-panel .customize-actions .continue {
+  margin-left: auto; /* push Continue to the right on desktop */
+}
+
+/* Mobile: stack vertically, Continue on top, full width */
 @media (max-width: 640px) {
-  /* Stack vertically, Continue on top */
-  .actions-customize {
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: 12px !important;
+  .customize-panel .customize-actions {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
   }
-  .actions-customize .continue {
-    order: -1 !important;     /* puts Continue above Back */
+  .customize-panel .customize-actions .continue {
+    order: -1 !important;     /* Continue above Back */
+    margin-left: 0 !important;
   }
-  .actions-customize .btn {
-    width: 100% !important;   /* full-width tap targets */
+  .customize-panel .customize-actions .btn {
+    width: 100% !important;   /* better tap targets */
   }
 }

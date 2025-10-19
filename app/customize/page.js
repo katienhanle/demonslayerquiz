@@ -162,10 +162,11 @@ export default function CustomizePage() {
               </div>
             </div>
 
-            <div className="actions actions-customize">
-              <Link href="/" className="btn ghost">Back</Link>
+            <div className="customize-actions">
+              <Link href="/" className="btn ghost back">Back</Link>
               <button onClick={handleContinue} className="btn primary continue">Continue</button>
             </div>
+
 
 
 
