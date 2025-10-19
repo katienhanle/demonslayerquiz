@@ -797,21 +797,18 @@ body {
     padding: 10px 14px;
   }
 }
-
-/* === Mobile: Customize actions — Continue on top, vertical, full width === */
+/* ===== Customize page: mobile buttons ===== */
 @media (max-width: 640px) {
-  .controls-panel .actions {
-    display: flex !important;
-    flex-direction: column !important;     /* stack vertically */
-    align-items: stretch !important;
-    justify-content: flex-start !important;
+  /* Stack vertically, Continue on top */
+  .actions-customize {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
     gap: 12px !important;
   }
-  .controls-panel .actions .continue {
-    order: -1 !important;                  /* put Continue above Back */
-    margin-left: 0 !important;             /* in case a desktop push-right is set */
+  .actions-customize .continue {
+    order: -1 !important;     /* puts Continue above Back */
   }
-  .controls-panel .actions .btn {
-    width: 100% !important;                /* better tap targets */
+  .actions-customize .btn {
+    width: 100% !important;   /* full-width tap targets */
   }
 }
