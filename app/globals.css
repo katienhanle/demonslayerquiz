@@ -797,9 +797,10 @@ body {
     padding: 10px 14px;
   }
 }
+
 /* === Customize page buttons (scoped, safe) === */
 
-/* Desktop: Back stays left, Continue on the right */
+/* Desktop: Back left, Continue right */
 .customize-panel .customize-actions {
   display: flex;
   gap: 12px;
@@ -807,21 +808,27 @@ body {
   align-items: center;
 }
 .customize-panel .customize-actions .continue {
-  margin-left: auto; /* push Continue to the right on desktop */
+  margin-left: auto;            /* pushes Continue to the right on desktop */
 }
 
-/* Mobile: stack vertically, Continue on top, full width */
+/* Mobile: stack vertically using GRID, Continue on TOP */
 @media (max-width: 640px) {
   .customize-panel .customize-actions {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: stretch !important;
+    display: grid;              /* avoid any inherited flex quirks */
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "continue"
+      "back";
+    gap: 12px;
   }
-  .customize-panel .customize-actions .continue {
-    order: -1 !important;     /* Continue above Back */
-    margin-left: 0 !important;
+  .customize-panel .customize-actions .continue { 
+    grid-area: continue; 
+    margin-left: 0;             /* reset the desktop push */
+  }
+  .customize-panel .customize-actions .back { 
+    grid-area: back; 
   }
   .customize-panel .customize-actions .btn {
-    width: 100% !important;   /* better tap targets */
+    width: 100%;                /* full-width tap targets on phones */
   }
 }
