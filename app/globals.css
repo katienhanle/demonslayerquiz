@@ -798,17 +798,27 @@ body {
   }
 }
 
-/* global.css */
+/* Desktop defaults: Back left, Continue on the right */
+.customize-panel .actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+.customize-panel .actions .continue {
+  margin-left: auto; /* pushes Continue to the right on desktop */
+}
 
-/* Mobile only: stack buttons, Continue on top, full width */
+/* Mobile only: stack vertically with Continue on top */
 @media (max-width: 640px) {
-  .controls-panel .actions {
-    display: flex;              /* ensure flex in case */
-    flex-direction: column-reverse; /* puts Continue (second in DOM) on top */
+  .customize-panel .actions {
+    flex-direction: column;      /* vertical stack */
     align-items: stretch;
-    gap: 12px;
   }
-  .controls-panel .actions .btn {
-    width: 100%;
+  .customize-panel .actions .continue {
+    order: -1;                   /* put Continue above Back */
+    margin-left: 0;              /* reset desktop push */
+  }
+  .customize-panel .actions .btn {
+    width: 100%;                 /* full-width tap targets */
   }
 }

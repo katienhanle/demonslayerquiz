@@ -162,10 +162,11 @@ export default function CustomizePage() {
               </div>
             </div>
 
-            <div className="actions" style={{ display:"flex", gap:12, marginTop:12 }}>
+            <div className="actions">
               <Link href="/" className="btn ghost">Back</Link>
-              <button onClick={handleContinue} className="btn primary">Continue</button>
+              <button onClick={handleContinue} className="btn primary continue">Continue</button>
             </div>
+
 
           </section>
 
