@@ -797,3 +797,18 @@ body {
     padding: 10px 14px;
   }
 }
+
+/* global.css */
+
+/* Mobile only: stack buttons, Continue on top, full width */
+@media (max-width: 640px) {
+  .controls-panel .actions {
+    display: flex;              /* ensure flex in case */
+    flex-direction: column-reverse; /* puts Continue (second in DOM) on top */
+    align-items: stretch;
+    gap: 12px;
+  }
+  .controls-panel .actions .btn {
+    width: 100%;
+  }
+}
