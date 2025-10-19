@@ -200,9 +200,7 @@ export default function ResultClient() {
             padding: 22,
           }}
         >
-          <p style={{ marginTop: 0, lineHeight: 1.65, opacity: .92, whiteSpace: "pre-line" }}>
-            {personalizeDescription(style.description, playerName)}
-          </p>
+          
 
 
           <div className="meta-rows" style={{ display: "grid", gap: 14, marginTop: 18 }}>
@@ -246,6 +244,10 @@ export default function ResultClient() {
               </div>
             )}
           </div>
+
+          <p style={{ marginTop: 10, lineHeight: 1.65, opacity: .92, whiteSpace: "pre-line" }}>
+            {personalizeDescription(style.description, playerName)}
+          </p>
 
           <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 24 }}>
             <button
