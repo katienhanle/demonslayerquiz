@@ -810,25 +810,42 @@ body {
 .customize-panel .customize-actions .continue {
   margin-left: auto;            /* pushes Continue to the right on desktop */
 }
-
-/* Mobile: stack vertically using GRID, Continue on TOP */
+/* === Customize page: mobile buttons fix === */
 @media (max-width: 640px) {
+  /* Use grid so we don't inherit any flex quirks from global .actions */
   .customize-panel .customize-actions {
-    display: grid;              /* avoid any inherited flex quirks */
-    grid-template-columns: 1fr;
+    display: grid !important;
+    grid-template-columns: 1fr !important;
     grid-template-areas:
       "continue"
       "back";
-    gap: 12px;
+    gap: 12px !important;
+    padding: 0 !important;           /* no extra padding around buttons */
+    margin-top: 12px !important;
   }
-  .customize-panel .customize-actions .continue { 
-    grid-area: continue; 
-    margin-left: 0;             /* reset the desktop push */
+
+  .customize-panel .customize-actions .continue {
+    grid-area: continue;
+    margin: 0 !important;            /* kill inherited margins that push it */
   }
-  .customize-panel .customize-actions .back { 
-    grid-area: back; 
+
+  .customize-panel .customize-actions .back {
+    grid-area: back;
+    margin: 0 !important;            /* keep it inside the panel */
   }
+
+  /* Normalize button sizing and centering on mobile */
   .customize-panel .customize-actions .btn {
-    width: 100%;                /* full-width tap targets on phones */
+    width: 100% !important;          /* full width for both buttons */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important; /* center the text */
+    text-align: center !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Ghost button sometimes inherits odd backgrounds; force transparent */
+  .customize-panel .customize-actions .btn.ghost {
+    background: transparent !important;
   }
 }
