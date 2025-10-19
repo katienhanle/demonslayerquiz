@@ -83,7 +83,7 @@ export default function DemographicsPage() {
 
   return (
     <main className="screen-wrap">
-      <div className="box">
+      <div className="box survey-box">
         <header style={{ marginBottom: 12 }}>
           <h1 style={{ margin: 0, fontSize: "clamp(26px,4vw,36px)" }}>
             Survey

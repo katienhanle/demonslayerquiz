@@ -856,4 +856,42 @@ body {
     }
   }
   
+  /* ==== Demographics / Survey: keep panel and fields in-bounds ==== */
+.survey-box {
+  width: 100%;
+  /* desktop-friendly max width but never exceed viewport */
+  max-width: min(960px, 100% - 2rem);
+  margin: 0 auto;
+  box-sizing: border-box;
+  overflow-x: hidden;           /* stop any horizontal creep */
+}
+
+/* rows and actions can wrap instead of stretching the box */
+.survey-box .form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* prevent long labels/buttons from forcing overflow */
+.survey-box .btn,
+.survey-box button,
+.survey-box input,
+.survey-box select,
+.survey-box textarea {
+  max-width: 100%;
+  box-sizing: border-box;
+  white-space: normal;          /* allow wrapping */
+  word-break: break-word;
+}
+
+/* Mobile polish: balanced inner padding and stacked actions */
+@media (max-width: 640px) {
+  .survey-box { padding-left: 1rem; padding-right: 1rem; }
+  .survey-box .form-actions { flex-direction: column; align-items: stretch; }
+  .survey-box .form-actions .btn { width: 100%; }
+}
+
 }
