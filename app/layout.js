@@ -4,7 +4,7 @@ import { Jersey_25 } from "next/font/google";
 
 const jersey25 = Jersey_25({ subsets: ["latin"], weight: "400" });
 
-export const metadata = { title: "Demon Slayer Quiz", description: "Which Hashira are you?" };
+export const metadata = { title: "Corps Exam", description: "Demon Slayer Inspired Personality Quiz" };
 
 export default function RootLayout({ children }) {
   return (
