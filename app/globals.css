@@ -848,4 +848,12 @@ body {
   .customize-panel .customize-actions .btn.ghost {
     background: transparent !important;
   }
+  @media (max-width: 640px) {
+    /* Equalize font sizing for both buttons on mobile */
+    .customize-panel .customize-actions .btn {
+      font-size: 1rem !important;
+      line-height: 1.2 !important;
+    }
+  }
+  
 }
