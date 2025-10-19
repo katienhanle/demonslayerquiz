@@ -89,7 +89,7 @@ export default function DemographicsPage() {
             Survey
           </h1>
           <p style={{ margin: "6px 0 0", color: "rgba(255,255,255,.75)" }}>
-            For insights, only takes 15 seconds!
+            For insights, only takes 15 seconds! (It'll let me know if I should make more quizzes like this.)
           </p>
         </header>
 
