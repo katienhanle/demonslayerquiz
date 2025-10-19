@@ -798,27 +798,20 @@ body {
   }
 }
 
-/* Desktop defaults: Back left, Continue on the right */
-.customize-panel .actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 12px;
-}
-.customize-panel .actions .continue {
-  margin-left: auto; /* pushes Continue to the right on desktop */
-}
-
-/* Mobile only: stack vertically with Continue on top */
+/* === Mobile: Customize actions — Continue on top, vertical, full width === */
 @media (max-width: 640px) {
-  .customize-panel .actions {
-    flex-direction: column;      /* vertical stack */
-    align-items: stretch;
+  .controls-panel .actions {
+    display: flex !important;
+    flex-direction: column !important;     /* stack vertically */
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    gap: 12px !important;
   }
-  .customize-panel .actions .continue {
-    order: -1;                   /* put Continue above Back */
-    margin-left: 0;              /* reset desktop push */
+  .controls-panel .actions .continue {
+    order: -1 !important;                  /* put Continue above Back */
+    margin-left: 0 !important;             /* in case a desktop push-right is set */
   }
-  .customize-panel .actions .btn {
-    width: 100%;                 /* full-width tap targets */
+  .controls-panel .actions .btn {
+    width: 100% !important;                /* better tap targets */
   }
 }
