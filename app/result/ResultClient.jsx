@@ -28,10 +28,19 @@ export default function ResultClient() {
   const [styleKey, setStyleKey] = useState("");
   const [error, setError] = useState("");
 
+  // NEW: track player name
+  const [playerName, setPlayerName] = useState("");
+
   useEffect(() => {
     try {
       const a = localStorage.getItem("avatar");
       if (a) setAvatar(JSON.parse(a));
+    } catch {}
+
+    // NEW: read saved name from /name/page.js
+    try {
+      const storedName = localStorage.getItem("dsq_player_name"); // set in name page
+      if (storedName) setPlayerName(storedName);
     } catch {}
 
     try {
@@ -54,6 +63,25 @@ export default function ResultClient() {
     }
   }, []);
 
+  // NEW: helper to personalize style.description with the name
+  function personalizeDescription(desc, name) {
+    if (!name) return desc;
+
+    // Gentle substitution: first “They/they” → name
+    let out = desc.replace(/\bThey\b/, name).replace(/\bthey\b/, name);
+
+    // Optional broader pass (uncomment if you want):
+    out = out
+      .replace(/\bThey're\b/g, `${name}'s`)
+      .replace(/\bthey're\b/g, `${name}'s`)
+      .replace(/\bTheir\b/g, `${name}'s`)
+      .replace(/\btheir\b/g, `${name}'s`)
+      .replace(/\bThem\b/g, name)
+      .replace(/\bthem\b/g, name);
+
+    return out;
+  }
+
   if (!result && !error) {
     return <div className="box"><p>Scoring…</p></div>;
   }
@@ -70,6 +98,47 @@ export default function ResultClient() {
       </div>
     );
   }
+  function personalizeDescription(desc, name) {
+    if (!name) return desc;
+  
+    // Replace only the first "They/they <verb>" with "Name <verb3sg>"
+    return desc.replace(/\b([Tt]hey)\b\s+([A-Za-z']+)/, (match, pron, verb) => {
+      const v = toThirdPerson(verb);
+      return `${name} ${v}`;
+    });
+  }
+  
+  function toThirdPerson(verbRaw) {
+    const verb = verbRaw; // keep original case as given in text
+  
+    // Irregulars / common auxiliaries
+    const irregular = {
+      are: "is",
+      Are: "Is",
+      have: "has",
+      Have: "Has",
+      do: "does",
+      Do: "Does",
+      go: "goes",
+      Go: "Goes",
+      were: "was",
+      Were: "Was",
+    };
+    if (irregular[verb] != null) return irregular[verb];
+  
+    // Already looks like 3rd person (very light guard)
+    if (/s$/.test(verb)) return verb;
+  
+    // Consonant + y → ies
+    if (/[b-df-hj-np-tv-z]y$/.test(verb)) return verb.replace(/y$/, "ies");
+  
+    // Add "es" for sibilant endings or …o
+    if (/(s|sh|ch|x|z|o)$/i.test(verb)) return `${verb}es`;
+  
+    // Default: add "s"
+    return `${verb}s`;
+  }
+  
 
   const style = STYLES[styleKey];
   const [p1, p2] = style.palette || ["#00d1b2", "#0b2b2b"];
@@ -79,7 +148,6 @@ export default function ResultClient() {
 
   return (
     <div className="box" style={{ borderColor: p1, display:"flow-root", paddingBottom:16 }}>
-
       <header style={{ marginBottom: 18 }}>
         <h1 style={{ margin: 0, fontSize: "clamp(28px,4vw,42px)" }}>
           Your Style: <span style={{ color: p1 }}>{style.name}</span>
@@ -89,7 +157,8 @@ export default function ResultClient() {
         </p>
       </header>
 
-      <div className="quiz-grid result-grid">        {/* LEFT: Avatar + overlay */}
+      <div className="quiz-grid result-grid">
+        {/* LEFT: Avatar + overlay */}
         <aside
           className="panel"
           style={{
@@ -132,8 +201,9 @@ export default function ResultClient() {
           }}
         >
           <p style={{ marginTop: 0, lineHeight: 1.65, opacity: .92, whiteSpace: "pre-line" }}>
-            {style.description}
+            {personalizeDescription(style.description, playerName)}
           </p>
+
 
           <div className="meta-rows" style={{ display: "grid", gap: 14, marginTop: 18 }}>
             {allies.length > 0 && (

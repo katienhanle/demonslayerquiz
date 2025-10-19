@@ -770,4 +770,30 @@ body {
       image-rendering: pixelated;     /* keep the 32px sprite crisp */
     }
   }
-  
+/* === Fix: name input stays neatly inside the .box === */
+.name-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.name-form .input {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  font-size: 16px;
+}
+
+/* Tighter box and responsive spacing */
+@media (max-width: 480px) {
+  .name-form .input {
+    font-size: 15px;
+    padding: 10px 14px;
+  }
+}

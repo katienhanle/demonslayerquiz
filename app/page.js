@@ -98,7 +98,7 @@ export default function HomePage() {
         </p>
 
         <div style={{ display: "grid", placeItems: "center" }}>
-          <Link href="/customize" className="btn primary">
+          <Link href="/name" className="btn primary">
             Start Quiz
           </Link>
         </div>
