@@ -202,8 +202,7 @@ export default function ResultClient() {
         >
           
 
-
-          <div className="meta-rows" style={{ display: "grid", gap: 14, marginTop: 18 }}>
+          <div className="meta-rows" style={{ display: "grid", gap: 14, marginTop: 0 }}>
             {allies.length > 0 && (
               <div>
                 <div className="meta-label">Fights well alongside</div>
