@@ -895,3 +895,42 @@ body {
 }
 
 }
+/* Download Card button - mobile only */
+.download-card-btn {
+  display: none;
+  width: 100%;
+  margin-top: 16px;
+  font-size: 18px;
+  padding: 14px 20px;
+}
+
+@media (max-width: 900px) {
+  .download-card-btn {
+    display: block;
+  }
+}
+
+/* Share page adjustments */
+.share-page-container {
+  min-height: 100vh;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.share-card-image {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  max-width: 540px; /* Half of 1080px for mobile comfort */
+}
+
+@media (min-width: 901px) {
+  .share-card-image {
+    max-width: 600px;
+  }
+}

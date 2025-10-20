@@ -145,8 +145,235 @@ export default function ResultClient() {
   const byKey = (k) => STYLES[k];
   const allies = (style.allies || []).map(byKey).filter(Boolean);
   const clashes = (style.clashes || []).map(byKey).filter(Boolean);
-
+  async function generateShareCard() {
+    const style = STYLES[styleKey];
+    const [p1] = style.palette || ["#ff7a00"]; // style color (orange for Ember)
+    const byKey  = (k) => STYLES[k];
+    const allies  = (style.allies  || []).map(byKey).filter(Boolean);
+    const clashes = (style.clashes || []).map(byKey).filter(Boolean);
+    const playerName = (typeof window !== "undefined" && localStorage.getItem("dsq_player_name")) || "";
+  
+    // Site purple base (card background)
+    const SITE_PURPLE = "#1a0a2e";
+  
+    const hexToRgb = (hex) => {
+      const h = hex.replace("#", "");
+      return `${parseInt(h.slice(0,2),16)}, ${parseInt(h.slice(2,4),16)}, ${parseInt(h.slice(4,6),16)}`;
+    };
+    const p1rgb = hexToRgb(p1);
+  
+    // A calmer orange for the panel (less saturated than raw p1)
+    const PANEL_ORANGE = `rgba(${p1rgb}, 0.1)`; // tweak 0.85–0.95 to taste
+  
+    // ---------- Offscreen root ----------
+    const container = document.createElement("div");
+    container.style.cssText = `
+      position: fixed; left: -9999px; top: 0;
+      width: 1080px; height: 1920px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Jersey 25', sans-serif; color: white;
+      box-sizing: border-box;
+    `;
+  
+    // ---------- Frame (captured) ----------
+    const frame = document.createElement("div");
+    frame.style.cssText = `
+      position: relative;
+      width: 100%; height: 100%;
+      border-radius: 40px;
+      border: 4px solid ${p1};
+      box-shadow: 0 0 0 1px rgba(255,255,255,.06) inset;
+      overflow: hidden;
+    `;
+    container.appendChild(frame);
+  
+    // Background (reliable for iOS/html2canvas)
+    const bg = document.createElement("div");
+    bg.style.cssText = `
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(120% 80% at 50% 20%,
+          rgba(0,0,0,0) 0%,
+          rgba(0,0,0,.35) 70%,
+          rgba(0,0,0,.55) 100%),
+        linear-gradient(160deg, #1a0a2e 0%, #2b0a3d 50%, #1f0d33 100%);
+      background-color: ${SITE_PURPLE};
+    `;
+    frame.appendChild(bg);
+  
+    // Content
+    const content = document.createElement("div");
+    content.style.cssText = `
+      position: relative; z-index: 1;
+      width: 100%; height: 100%;
+      padding: 160px 96px 120px; /* keep header clear of IG top chrome */
+      box-sizing: border-box;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: space-between;
+    `;
+    frame.appendChild(content);
+  
+    // ---------- Header ----------
+    const header = document.createElement("div");
+    header.style.cssText = `text-align:center; width:100%;`;
+    const displayName = playerName ? `${playerName}'s` : "Your";
+    header.innerHTML = `
+      <h1 style="font-size:64px; margin:0 0 8px 0; color:#fff; font-weight:400;">
+        ${displayName} Corps Card
+      </h1>
+      <h2 style="font-size:96px; margin:0 0 6px 0; color:${p1}; font-weight:400;">
+        ${style.name}
+      </h2>
+      <p style="font-size:48px; margin:0; opacity:.85;">
+        ${style.tagline} <span style="opacity:.6;">(${style.code})</span>
+      </p>
+    `;
+  
+    // ---------- Avatar (crisp + purple background to kill corner bleed) ----------
+    const avatarBox = document.createElement("div");
+    avatarBox.style.cssText = `
+      width:560px; height:560px; border-radius:40px;
+      overflow:hidden; background-clip:padding-box;
+      background-color: ${SITE_PURPLE};
+      border: 3px solid ${p1}88;
+      display:flex; align-items:center; justify-content:center;
+      margin:24px 0 72px 0;
+      box-shadow: 0 12px 40px rgba(0,0,0,.35);
+    `;
+  
+    const originalCanvas =
+      document.querySelector("[data-avatar-root] canvas") ||
+      document.querySelector(".preview-card canvas") ||
+      document.querySelector("aside.panel canvas");
+    if (!originalCanvas) { console.error("Avatar canvas not found!"); return; }
+  
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+  
+    const baseImg = new Image();
+    baseImg.src = originalCanvas.toDataURL("image/png");
+    await baseImg.decode();
+  
+    const overlay = new Image();
+    overlay.src = `/assets/overlays/${style.key.toLowerCase()}_overlay.png`;
+    try { await overlay.decode(); } catch {}
+  
+    const OUT = document.createElement("canvas");
+    OUT.width = OUT.height = 560;
+    const ctx = OUT.getContext("2d");
+    ctx.imageSmoothingEnabled = false;
+    ctx.fillStyle = SITE_PURPLE;  // 👈 fill first so corners are pure purple
+    ctx.fillRect(0, 0, 560, 560);
+    ctx.drawImage(baseImg, 0, 0, 560, 560);
+    if (overlay.width) ctx.drawImage(overlay, 0, 0, 560, 560);
+  
+    const avatar = new Image();
+    avatar.src = OUT.toDataURL("image/png");
+    avatar.style.cssText = "width:560px;height:560px;image-rendering:pixelated;display:block;";
+    avatarBox.appendChild(avatar);
+  
+    // ---------- Meta panel (flat orange, no shadows/gradients/gloss) ----------
+    const meta = document.createElement("div");
+    meta.style.cssText = `
+      position: relative;
+      width:100%; max-width:760px; margin:0 auto; align-self:center;
+      box-sizing:border-box;
+      padding: 28px 32px;
+      border-radius: 24px;
+      overflow: hidden;
+      background: ${PANEL_ORANGE};     /* 👈 flat subdued orange */
+      border: 3px solid ${p1};         /* style-colored border */
+      color: #fff;
+    `;
+    // Perfectly radius-matched inner stroke (no corner artifacts)
+    const inner = document.createElement("div");
+    inner.style.cssText = `
+      position:absolute; inset:0; pointer-events:none;
+      border-radius: inherit;
+      border: 1px solid rgba(255,255,255,0.18);
+      box-sizing: border-box;
+    `;
+    meta.appendChild(inner);
+  
+    const chip = (label, color) => `
+      <span style="
+        display:inline-flex;align-items:center;gap:14px;
+        padding:14px 26px;border-radius:999px;
+        background: rgba(0,0,0,.12);
+        border:2px solid ${color};
+        font-size:32px;margin:0 12px 12px 0;">
+        <i style="width:16px;height:16px;border-radius:50%;background:${color};display:inline-block;"></i>
+        ${label}
+      </span>
+    `;
+  
+    const alliesHTML = allies.length
+      ? `<div style="margin-bottom:8px;">
+           <div style="font-size:32px; opacity:.95; margin:0 0 12px 0;">Fights well alongside</div>
+           <div>${allies.map(s => chip(s.name, s.palette[0])).join("")}</div>
+         </div>`
+      : "";
+  
+    const clashesHTML = clashes.length
+      ? `<div style="margin-bottom:8px;">
+           <div style="font-size:32px; opacity:.95; margin:0 0 12px 0;">Tends to clash with</div>
+           <div>${clashes.map(s => chip(s.name, s.palette[0])).join("")}</div>
+         </div>`
+      : "";
+  
+    const roleHTML = style.rank
+      ? `<div>
+           <div style="font-size:32px; opacity:.95; margin:0 0 12px 0;">Corps role</div>
+           <span style="
+             display:inline-flex;align-items:center;gap:14px;
+             padding:16px 28px;border-radius:999px;
+             background: rgba(0,0,0,.16);
+             border:2px solid #fff; font-size:34px;">
+             <i style="width:16px;height:16px;border-radius:50%;background:#fff;display:inline-block;"></i>
+             ${style.rank}
+           </span>
+         </div>`
+      : "";
+  
+    meta.insertAdjacentHTML("beforeend", alliesHTML + clashesHTML + roleHTML);
+  
+    // ---------- Footer ----------
+    const footer = document.createElement("div");
+    footer.style.cssText = "text-align:center;width:100%;";
+    footer.innerHTML = `
+      <p style="font-size:40px; opacity:.6; margin:0 0 12px 0;">Take the quiz at</p>
+      <p style="font-size:56px; margin:0; color:${p1};">bit.ly/corpsquiz</p>
+    `;
+  
+    // Assemble
+    content.append(header, avatarBox, meta, footer);
+    document.body.appendChild(container);
+  
+    // Allow paint before capture
+    await new Promise((r) => setTimeout(r, 60));
+  
+    // Capture
+    const html2canvas = (await import("html2canvas")).default;
+    const canvas = await html2canvas(frame, {
+      scale: window.devicePixelRatio || 2,
+      backgroundColor: SITE_PURPLE,
+      useCORS: true,
+      logging: false,
+    });
+  
+    document.body.removeChild(container);
+    canvas.toBlob((blob) => {
+      const url = URL.createObjectURL(blob);
+      sessionStorage.setItem("shareCardUrl", url);
+      router.push("/share");
+    }, "image/png");
+  }
+  
+  
+  
+  
   return (
+    <>
+    
     <div className="box" style={{ borderColor: p1, display:"flow-root", paddingBottom:16 }}>
       <header style={{ marginBottom: 18 }}>
         <h1 style={{ margin: 0, fontSize: "clamp(28px,4vw,42px)" }}>
@@ -171,7 +398,8 @@ export default function ResultClient() {
             padding: 20,
           }}
         >
-          <div style={{ position: "relative", width: 192, height: 192, lineHeight: 0 }}>
+          <div data-avatar-root style={{ position: "relative", width: 192, height: 192, lineHeight: 0 }}>
+
             <AvatarComposer avatar={avatar || {}} />
             <img
               src={`/assets/overlays/${style.key.toLowerCase()}_overlay.png`}
@@ -189,6 +417,33 @@ export default function ResultClient() {
             />
           </div>
         </aside>
+        <button
+          onClick={generateShareCard}
+          className="btn primary share-btn"
+          style={{
+            display: 'none',          // hidden on desktop
+            width: '100%',
+            marginTop: '16px',
+            background: p1,
+            borderColor: p1,
+          }}
+          aria-label="Download shareable card"
+        >
+          View Your Card
+        </button>
+
+        <style jsx>{`
+          @media (max-width: 900px) {
+            button[aria-label="Download shareable card"] {
+              display: block !important;
+            }
+            .share-btn {
+              font-size: 20px;        /* bump text size on mobile */
+              padding: 16px 18px;     /* a touch more padding */
+              letter-spacing: 0.02em; /* slight tracking for legibility */
+            }
+          }
+        `}</style>
 
         {/* RIGHT: Description + chips + CTA */}
         <section
@@ -260,5 +515,6 @@ export default function ResultClient() {
         </section>
       </div>
     </div>
+    </>
   );
 }
