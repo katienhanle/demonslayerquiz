@@ -12,12 +12,14 @@ const HAIR_STYLES = [
   "hair_5","hair_6","hair_7","hair_8",
   "hair_9","hair_10","hair_11","hair_12",
   "hair_13","hair_14","hair_15","hair_16", "hair_17",
-  "hair_18", "hair_19",
+  "hair_18", "hair_19","hair_20", "hair_21", "hair_22",
 ];
 const EYE_STYLES  = [
   "eyes_1","eyes_2","eyes_3","eyes_4",
   "eyes_5","eyes_6","eyes_7","eyes_8",
-  "eyes_9","eyes_10","eyes_11","eyes_12"
+  "eyes_9","eyes_10","eyes_11","eyes_12",
+  "eyes_13","eyes_14","eyes_15","eyes_16",
+  "eyes_17","eyes_18","eyes_19","eyes_20"
 ];
 const SKIN_MIN = 1;   // base_skin-01.png (or -1.png if you removed padding)
 const SKIN_MAX = 11;
